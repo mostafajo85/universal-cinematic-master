@@ -23,10 +23,16 @@ Python 3.10+:
 python scripts/ucm.py --help
 ```
 
-Run from `skills/ucm` or use the scripts in `.github/workflows/` for complete checks.
+Run from `skills/ucm`; CI also executes `python -m unittest discover -s tests -p 'test_*.py' -v` from the repository root, enforces a pinned trusted release digest, runs Standard preflight and builds a verified public ZIP.
 
 ## Releases and self-improvement
 
-`resources/MASTER.md`, validators, schemas and protected governance files must be changed only through a tested, reviewed commit and a refreshed signed-off release. Operational learning belongs in `adaptive/` and must not silently bypass any validator gate. Local patches do not automatically sync to GitHub. Use a branch and pull request; do not push patches directly to main.
+`resources/MASTER.md`, validators, schemas and protected governance files must be changed only through a tested, reviewed commit and a refreshed signed-off release. Operational learning belongs in `adaptive/` and must not silently bypass any validator gate. Local patches do not automatically sync to GitHub. Use a branch and pull request; do not push patches directly to main. See [the release, trust, and update policy](docs/RELEASE_AND_UPDATE_POLICY.md). The workflow's pinned trust value is only as strong as branch/repository protection; configure required CI checks and review for `main` before production releases.
 
 **RC6 is a release candidate.** Local checks are not proof of live functionality in Hermes/Gemini.
+
+## GitHub Actions and portable install
+
+After a successful Actions run, open that run's **Artifacts** section and download `UCM-Smart-Skill`; the contained `UCM_Smart_Skill.zip` has `SKILL.md` at its root. Install it using your agent's native skill manager or ZIP importer. This private repository needs authenticated access; universal automatic GitHub installation is **not** guaranteed for all agent platforms.
+
+Hermes self-improvement can modify installed adaptive prose locally, but these changes do **not** push themselves to GitHub. To publish a change, review the diff on a branch, run the full CI suite, and merge by PR. Keep film projects and the six KB source texts outside the repository.
