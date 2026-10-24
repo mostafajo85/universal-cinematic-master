@@ -1,0 +1,35 @@
+{
+  "type": "OBSERVED_BYTES_SHA256_ONLY_NOT_KB_CONTENT",
+  "private_kb_sources": {
+    "CINE": {
+      "filename": "CINEMATIC_MASTER_LIBRARY_FINAL_KB-CINE.txt",
+      "source_sha256": "b979b2d8d2482ccaa2234cdab25c8b2452bdf822fbe48cd5de3c9885d70ea3b0",
+      "bytes": 469040
+    },
+    "EXEC": {
+      "filename": "GENERATIVE_FILMMAKING_EXECUTION_KNOWLEDGE_BASE_FINAL_KB-EXEC.txt",
+      "source_sha256": "8d2962cfc71fcc6f56ca9acb90266ea0f86cc39e8ded715504303fa71089a7e7",
+      "bytes": 59659
+    },
+    "TRANS": {
+      "filename": "CINEMATIC_TRANSITION_KNOWLEDGE_BASE_FINAL_KB-TRANS.txt",
+      "source_sha256": "a601b4ee32a6ee36fee143961f3878cd4b6d06e125bc156e3b776635069acd3d",
+      "bytes": 79754
+    },
+    "PERF": {
+      "filename": "CINEMATIC_PERFORMANCE_KNOWLEDGE_BASE_FINAL_KB-PERF.txt",
+      "source_sha256": "f3b08161b813f7814ee2dbddcb02e51b8829a9de2d1ca78be1eb949fcba3d96b",
+      "bytes": 147347
+    },
+    "REAL": {
+      "filename": "GENERATIVE_REALISM_INTEGRITY_KNOWLEDGE_BASE_FINAL_KB-REAL.txt",
+      "source_sha256": "456f4713b78d5262efcb2fb92dff694b9fe82e2eeedd936d91394fe9c6a60efb",
+      "bytes": 120131
+    },
+    "COMPAT": {
+      "filename": "GENERATIVE_VIDEO_COMPATIBILITY_KNOWLEDGE_BASE_FINAL_KB-COMPAT.txt",
+      "source_sha256": "78d30ac12f55a8b23f59b1e4d113f31bb98f5d74d4bbd82065f6a453ebf39867",
+      "bytes": 38438
+    }
+  }
+}

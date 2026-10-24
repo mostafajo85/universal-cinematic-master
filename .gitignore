@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.env*
+knowledge_base/*.txt
+!knowledge_base/README.txt
+**/PROJECT_RECORD.json
+**/SCREENPLAY.json
+projects/
+private/
+*.key
+*.pem

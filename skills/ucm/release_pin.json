@@ -1,0 +1,38 @@
+{
+  "adaptive_baselines": {
+    "SKILL.md": "6268ac708feffb6711f99399d7be96a869bafd6115cf4874fd4d3562aec8a349",
+    "adaptive/OPERATIONAL_NOTES.md": "bd9bed6b4848d09ace7086f6e0a9b8d3364c101a8fb901ba6c94b33d936abbdc"
+  },
+  "integrity_schema": "ucm.core-immutable-adaptive-skill.v1",
+  "master_sha256": "16a6db36e97f416ad7faeaf77159dc45df385c618701e5d6b120203f20a4d945",
+  "members": {
+    "knowledge_base/README.txt": "3a7257f762f10745a010deb41a1b615335bf0cd5b48d465420334255b86c4f7d",
+    "resources/MASTER.md": "16a6db36e97f416ad7faeaf77159dc45df385c618701e5d6b120203f20a4d945",
+    "resources/PRIVATE_KB_SOURCE_PINS_ONLY.json": "edf3dd91b12a2e27fd41fd8cedac090b7ac9dde1544325df647470ba4d629b30",
+    "resources/RESOURCE_PROBE.txt": "0f0bb73541987f329482d7bd54fc5ba3fdab668e2d8dffd0d24c23a5e42881a6",
+    "schemas/PROJECT_SCHEMA_v2.json": "9a29f996894e2c9723ec95ea7d3f1cca5c48da578a33c4d4382295a183b5629b",
+    "scripts/ucm.py": "317bac6640622a9653faa9fb254b8de2aea6f43d468cba4636c2b7eb45c66007",
+    "scripts/ucm_core/__init__.py": "da27a0b6e77b4c7409b7541ad50b4410ad6130e5fffd4597c0884b059fdd4a62",
+    "scripts/ucm_core/contracts.py": "62ed8f96034035ee5a0b1ab6f602e710e47a8696510136cd65bf2c0859daf8f4",
+    "scripts/ucm_core/delivery.py": "3729352c076df36548e37fac254963dc095c20a8b2690c168344b2eefa5da483",
+    "scripts/ucm_core/drive_bridge.py": "5ab89e24043399ad3d246c51e0333f681489aaac09140faf545fc4f6121a3799",
+    "scripts/ucm_core/knowledge.py": "19d1c4aed3c2c3a14238e2bf31da162873732b1d0f7d9fb697a0a57ea40d0627",
+    "scripts/ucm_core/knowledge_gate.py": "f5f5d2bea8d5c3057237356808f56785905e3f1ba51a1beffb39d0b6a8d136cb",
+    "scripts/ucm_core/migrate.py": "1d44dfed88ab8817c813cfd1a093913b6f01cd9ff5cf4dfa79a128a1d217736b",
+    "scripts/ucm_core/portable.py": "5143866809f5645275f12b85229df820ae600ee202aa712a151f60b4bc68bd7c",
+    "scripts/vendor_p6/contracts/P6_H01_H10_MASTER.json": "c9f28eb2cbfa3db29debd81af65fe2b1825aef2d606e3d1cca016a0c765bb369",
+    "scripts/vendor_p6/core/canonical_source.py": "a0e1b0c99a301c0233f843b035f6004c70dd9780b4b054b00004417aee1bb6b4",
+    "scripts/vendor_p6/core/validator.py": "f117ca53dd79ce0cf7ad38f653eefe709507d7322c38e7f0024f6e69396207fa",
+    "scripts/vendor_p6/run_validator.py": "3dcb9532ccc9afd2fb4591d618a7e263b5bee389c2125fb1656a3a966c986525"
+  },
+  "operational_modes": [
+    "STANDARD",
+    "PRO"
+  ],
+  "optional_knowledge": "SIX_ORIGINAL_KB_FROM_VERIFIED_PRIVATE_WORKSPACE",
+  "p6_contract_sha256": "c9f28eb2cbfa3db29debd81af65fe2b1825aef2d606e3d1cca016a0c765bb369",
+  "protected_skill_guard_sha256": "d51945d11346c174e1acf805a29a2b8f45d6406d11acde0e17936708209b1c30",
+  "public_distribution_private_kb_included": false,
+  "release": "UCM_v2_PORTABLE_RC6_ADAPTIVE_INTEGRITY",
+  "skill_name": "cinematic-film-orchestrator-rc6"
+}

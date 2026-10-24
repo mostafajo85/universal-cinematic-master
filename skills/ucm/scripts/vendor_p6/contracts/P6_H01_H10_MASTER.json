@@ -1,0 +1,53 @@
+{
+  "contract_id": "P6_MASTER_v2_PORTABLE_RC6_TWO_MODES",
+  "origin_master_sha256": "16a6db36e97f416ad7faeaf77159dc45df385c618701e5d6b120203f20a4d945",
+  "criteria": [
+    {
+      "id": "H01",
+      "definition": "LOCKED CANON: compare every declared date/age, setting, premise, character ID, dialect, style, aspect, target edit duration and prior user approval with exact latest approved value. Contradiction => FAIL; uncertain continuity => NOT_VERIFIED."
+    },
+    {
+      "id": "H02",
+      "definition": "SPEAKING & TOTAL DRAMATIC CHARACTER COUNTS: scan EVERY dialogue cue, speaker label, script line, V.O., O.S., offscreen call, phone/radio/recorded speech, personified narrator, flashback, non-dialogue named action role and credit against P1.0; list the distinct identities, not just on-screen faces. Fail unauthorized additions or missing count. Explicitly track actor=existing-role aliases. Zero substantive dialogue => FAIL dialogue-film scope."
+    },
+    {
+      "id": "H03",
+      "definition": "DIALOGUE INFORMATION LEDGER: for EACH asserted knowledge, record who knows what, when, source and whether it was audibly/visually accessible; verify quotes against actual preceding spoken lines. A character must not claim \"I didn't say X\" when X was previously spoken. Distinguish suspicion, testimony, circumstantial evidence, proof and confirmation. Never promote a suspect into proven perpetrator/kill verdict by unverified dialogue."
+    },
+    {
+      "id": "H04",
+      "definition": "INTERVAL ARITHMETIC & SPOKEN DURATION: use canonical numeric seconds and one non-overlapping ordered interval per beat; start_0=0; end_i=start_{i+1}; total=last_end; SUM(per-beat durations)=film target; per-beat duration=end-start. For each beat/line count its actual dialogue words under an explicit reproducible Arabic word tokenization policy, annotate speaking_rate_words_per_second as JUSTIFIED_ESTIMATE (do not hard-code 1.5–2.0 as universal), and compute speech_seconds=word_count/rate. Assign independent non-overlapping physical-action, pause, visual reveal and reaction budgets unless actual parallel performance is explicitly demonstrated with overlap fields. No double-counted overlapping time. Reject any beat where required seconds exceed allotted seconds. Exact durations are production targets until measured from final approved audio and edit."
+    },
+    {
+      "id": "H05",
+      "definition": "PHYSICAL & PROP CONTINUITY: stage geography, character positions, body parts, hand identity, reach/path, contact and release, force response, wardrobe, lighting sources, glass/reflections, hero prop access/transfer, unfastening, and actual continuity ledger must agree with screenplay. Protect important props in both active and transient states; no teleports or inexplicable camera/physics."
+    },
+    {
+      "id": "H06",
+      "definition": "CAUSALITY & EXTERNAL CLAIMS: Every climax/payoff needs setup and accessible cause in the visible/heard story; no magically fast external help, unsupported forensic certainty, legal guarantees, medical/technical/historical assertion without appropriate verification and cautious wording. Source-check niche empirical claims when relevant research tools exist; otherwise mark uncertainty, rewrite to non-assertive story claim, or block critical claim. KB references do NOT certify jurisdiction-specific law or historical device specs."
+    },
+    {
+      "id": "H07",
+      "definition": "OPENING HOOK & ENDING: within the first ~5–8 seconds for short-form formats present a compelling visible/audible question, contradiction, conflict, or emotionally meaningful action, unless specifically approved narrative alternative. Climax must change the situation via earned character decision; explicit setup-to-payoff chain plus BOTH external conflict consequence and protagonist internal/emotional turn where applicable. No obligatory surprise, siren or heroic victory. A strong slow-burn can keep silence and ambiguity, but not merely assert inner feelings with no filmable evidence."
+    },
+    {
+      "id": "H08",
+      "definition": "DIALOGUE-DRIVEN PERFORMANCE: every core exchange advances conflict, tactic, relationship or information; natural approved dialect, distinct voices, measured pauses and listener-owned moments. Silence encouraged when meaningful, but cannot turn the film into Purely Visual/Silent. No mechanically imposed talking density."
+    },
+    {
+      "id": "H09",
+      "definition": "PRODUCTION FEASIBILITY: distinguish what is filmable via shot sequence from what requires unverified simultaneous microscale detail, unsupported text, audio sync, camera/hand physics or rare historical material accuracy; flag feasibility not fake guarantee."
+    },
+    {
+      "id": "H10",
+      "definition": "CROSS-ARTIFACT CONSISTENCY: reconcile Story Bible, canonical screenplay, beat/scene timing, named lines, character registry, causal ledger, prop custody, dialogue packet and assessment report; no PASS if QA summary disagrees with actual text."
+    }
+  ],
+  "generation_bins": [
+    4,
+    6,
+    8,
+    10
+  ],
+  "semantic_checks_require_external_review": true
+}

@@ -1,0 +1,2 @@
+UCM_RC3_RESOURCE_OK_20261024
+This is a public nonempty resource retrieval probe, not a KB or runtime success receipt.

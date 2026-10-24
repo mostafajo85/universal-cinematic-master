@@ -1,0 +1,67 @@
+name: UCM validation and portable ZIP
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile Python and verify structural invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import ast,pathlib,json
+          root=pathlib.Path('skills/ucm')
+          assert (root/'SKILL.md').is_file()
+          assert (root/'resources/MASTER.md').is_file()
+          assert (root/'release_pin.json').is_file()
+          for file in root.rglob('*.py'): ast.parse(file.read_text(encoding='utf-8'),filename=str(file))
+          md=(root/'SKILL.md').read_text(encoding='utf-8')
+          assert 'STANDARD' in md and 'PRO' in md
+          assert not list((root/'knowledge_base').glob('*.txt')) or list((root/'knowledge_base').glob('*.txt'))==[root/'knowledge_base/README.txt']
+          json.loads((root/'release_pin.json').read_text(encoding='utf-8'))
+          print('STRUCTURAL_PASS')
+          PY
+      - name: Release validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd skills/ucm
+          python scripts/ucm.py --help
+          python scripts/ucm.py verify-release --help
+          python scripts/ucm.py preflight --help
+          PIN_SHA=$(sha256sum release_pin.json | cut -d' ' -f1)
+          python scripts/ucm.py verify-release --skill-root . --trusted-pin-sha256 "$PIN_SHA"
+          python scripts/ucm.py preflight --skill-root . --trusted-pin-sha256 "$PIN_SHA" --mode STANDARD
+      - name: Build ZIP with SKILL.md at root
+        shell: bash
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile
+          root=pathlib.Path('skills/ucm')
+          target=pathlib.Path('UCM_Smart_Skill.zip')
+          with zipfile.ZipFile(target,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+              for f in sorted(root.rglob('*')):
+                  if f.is_file() and not ('__pycache__' in f.parts or f.suffix=='.pyc'):
+                      rel=f.relative_to(root).as_posix()
+                      if rel.startswith('knowledge_base/') and rel!='knowledge_base/README.txt':
+                          raise RuntimeError('Forbidden knowledge payload in public archive: '+rel)
+                      z.write(f,rel)
+          with zipfile.ZipFile(target) as z:
+              assert 'SKILL.md' in z.namelist()
+              assert z.testzip() is None
+          print('ZIP_PASS',target.stat().st_size)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: UCM-Smart-Skill
+          path: UCM_Smart_Skill.zip

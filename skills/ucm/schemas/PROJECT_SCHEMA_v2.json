@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ucm:project:record:v2",
+  "title": "UCM v2 Canonical Project Record — Structural Contract",
+  "type": "object",
+  "required": [
+    "schema",
+    "project_id",
+    "name",
+    "folder_id",
+    "record_file_id",
+    "revision",
+    "status",
+    "artifacts",
+    "checkpoints",
+    "gate_receipts",
+    "events",
+    "canonical_locks"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ucm.project.record.v2"
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "folder_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "record_file_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "status": {
+      "enum": [
+        "MIGRATION_REVIEW_REQUIRED",
+        "PROJECT_CREATED",
+        "ACTIVE",
+        "BLOCKED",
+        "ARCHIVED"
+      ]
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/asset"
+      }
+    },
+    "checkpoints": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "gate_receipts": {
+      "type": "object"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "canonical_locks": {
+      "type": "object"
+    },
+    "legacy_aliases": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "legacy_sources": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "migration_warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "asset": {
+      "type": "object",
+      "required": [
+        "artifact_id",
+        "stored_file_id",
+        "stored_parent_id",
+        "sha256",
+        "filename",
+        "role",
+        "revision",
+        "media_state",
+        "approval_state"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stored_file_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stored_parent_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^(?:[a-f0-9]{64}|HASH_NOT_VERIFIED)$"
+        },
+        "filename": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "media_state": {
+          "enum": [
+            "NOT_INSPECTED",
+            "CLAIMED_INSPECTED_NOT_VERIFIED",
+            "ACTUAL_FILE_VERIFIED",
+            "INSPECTED"
+          ]
+        },
+        "approval_state": {
+          "enum": [
+            "PENDING_USER_APPROVAL",
+            "CLAIMED_NOT_AUTHENTICATED",
+            "EXTERNALLY_VERIFIED",
+            "NOT_APPROVED",
+            "STALE"
+          ]
+        },
+        "approval_claims": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "legacy_source_records": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "description": "Backend-neutral locators in legacy ID fields; no provider account required. JSON Schema is structural; CLI adds state constraints."
+}
