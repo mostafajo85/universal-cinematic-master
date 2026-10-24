@@ -1,67 +1,89 @@
 name: UCM validation and portable ZIP
+
 on:
   push:
     branches: [main]
   pull_request:
   workflow_dispatch:
+
 permissions:
   contents: read
+
+# A trusted pin MUST NOT be derived from the candidate release_pin.json.
+# Prefer a protected GitHub Actions repository variable for new releases.
+# This fallback is pinned to independently inspected RC6, but it lives in
+# the repository: without branch protection/review, it is not a trust anchor.
+env:
+  UCM_TRUSTED_PIN_SHA256: ${{ vars.UCM_TRUSTED_PIN_SHA256 || '73dee756e933d74ea06c8d8ab89bd7e95d6f2e7a95452a32bacb86f202c38676' }}
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Compile Python and verify structural invariants
+
+      - name: Check trusted release pin
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import ast,pathlib,json
-          root=pathlib.Path('skills/ucm')
-          assert (root/'SKILL.md').is_file()
-          assert (root/'resources/MASTER.md').is_file()
-          assert (root/'release_pin.json').is_file()
-          for file in root.rglob('*.py'): ast.parse(file.read_text(encoding='utf-8'),filename=str(file))
-          md=(root/'SKILL.md').read_text(encoding='utf-8')
-          assert 'STANDARD' in md and 'PRO' in md
-          assert not list((root/'knowledge_base').glob('*.txt')) or list((root/'knowledge_base').glob('*.txt'))==[root/'knowledge_base/README.txt']
-          json.loads((root/'release_pin.json').read_text(encoding='utf-8'))
-          print('STRUCTURAL_PASS')
+          import hashlib, os, pathlib
+          pin = pathlib.Path('skills/ucm/release_pin.json').read_bytes()
+          actual = hashlib.sha256(pin).hexdigest()
+          expected = os.environ['UCM_TRUSTED_PIN_SHA256'].strip()
+          assert len(expected) == 64 and all(c in '0123456789abcdef' for c in expected), 'INVALID_TRUSTED_PIN'
+          if actual != expected:
+              raise SystemExit('UNTRUSTED_RELEASE_PIN: expected='+expected+' actual='+actual)
+          print('INDEPENDENT_PIN_COMPARISON_PASS', actual)
           PY
-      - name: Release validation
+
+      - name: Run actual unit and tamper regression tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p 'test_*.py' -v
+
+      - name: Verify protected core and run Standard preflight
         shell: bash
         run: |
           set -euo pipefail
           cd skills/ucm
-          python scripts/ucm.py --help
-          python scripts/ucm.py verify-release --help
-          python scripts/ucm.py preflight --help
-          PIN_SHA=$(sha256sum release_pin.json | cut -d' ' -f1)
-          python scripts/ucm.py verify-release --skill-root . --trusted-pin-sha256 "$PIN_SHA"
-          python scripts/ucm.py preflight --skill-root . --trusted-pin-sha256 "$PIN_SHA" --mode STANDARD
-      - name: Build ZIP with SKILL.md at root
+          python scripts/ucm.py verify-release --skill-root . --trusted-pin-sha256 "$UCM_TRUSTED_PIN_SHA256"
+          python scripts/ucm.py preflight --skill-root . --trusted-pin-sha256 "$UCM_TRUSTED_PIN_SHA256" --mode STANDARD
+
+      - name: Build portable public ZIP from verified source
         shell: bash
         run: |
+          set -euo pipefail
+          cd skills/ucm
+          python scripts/ucm.py build-upload --skill-root . --trusted-pin-sha256 "$UCM_TRUSTED_PIN_SHA256" --profile public --out ../../UCM_Smart_Skill.zip
+          python scripts/ucm.py check-package --zip ../../UCM_Smart_Skill.zip
+
+      - name: Inspect exact ZIP contents and privacy boundary
+        shell: bash
+        run: |
+          set -euo pipefail
           python - <<'PY'
-          import pathlib,zipfile
+          import pathlib, zipfile
           root=pathlib.Path('skills/ucm')
-          target=pathlib.Path('UCM_Smart_Skill.zip')
-          with zipfile.ZipFile(target,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
-              for f in sorted(root.rglob('*')):
-                  if f.is_file() and not ('__pycache__' in f.parts or f.suffix=='.pyc'):
-                      rel=f.relative_to(root).as_posix()
-                      if rel.startswith('knowledge_base/') and rel!='knowledge_base/README.txt':
-                          raise RuntimeError('Forbidden knowledge payload in public archive: '+rel)
-                      z.write(f,rel)
-          with zipfile.ZipFile(target) as z:
-              assert 'SKILL.md' in z.namelist()
-              assert z.testzip() is None
-          print('ZIP_PASS',target.stat().st_size)
+          with zipfile.ZipFile('UCM_Smart_Skill.zip') as z:
+              names=[name for name in z.namelist() if not name.endswith('/')]
+              expected=sorted(p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix != '.pyc' and (not p.relative_to(root).as_posix().startswith('knowledge_base/') or p.relative_to(root).as_posix()=='knowledge_base/README.txt'))
+              assert sorted(names)==expected, 'PACKAGE_SOURCE_DRIFT'
+              assert 'SKILL.md' in names, 'ROOT_SKILL_MISSING'
+              assert z.testzip() is None, 'ZIP_CORRUPTION'
+              assert all(not n.startswith('knowledge_base/') or n=='knowledge_base/README.txt' for n in names), 'PRIVATE_KB_EXPOSED'
+              assert not any(n.endswith(('PROJECT_RECORD.json','SCREENPLAY.json')) or n.startswith(('projects/','private/')) for n in names), 'PROJECT_DATA_EXPOSED'
+              print('PUBLIC_ZIP_CONTENTS_PASS',len(names))
           PY
+
       - uses: actions/upload-artifact@v4
         with:
           name: UCM-Smart-Skill
           path: UCM_Smart_Skill.zip
+          if-no-files-found: error
+          retention-days: 30
