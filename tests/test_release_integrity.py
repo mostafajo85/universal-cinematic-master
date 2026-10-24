@@ -95,10 +95,21 @@ class ReleaseIntegrityTests(unittest.TestCase):
         self.assertEqual([p.name for p in kb.iterdir()], ["README.txt"])
         self.assertFalse(list(REPO.rglob("PROJECT_RECORD.json")))
         self.assertFalse(list(REPO.rglob("SCREENPLAY.json")))
-        for path in REPO.rglob("*"):
-            if path.is_file():
-                self.assertNotIn("__pycache__", path.parts)
-                self.assertNotEqual(path.suffix, ".pyc")
+        # The Python runner creates untracked caches; audit Git-tracked paths.
+        import subprocess
+        tracked = subprocess.run(
+            ["git", "ls-files", "-z"], cwd=REPO, check=True,
+            capture_output=True,
+        ).stdout.decode("utf-8").split(chr(0))
+        for name in tracked:
+            if not name:
+                continue
+            path = pathlib.PurePosixPath(name)
+            self.assertNotIn("__pycache__", path.parts)
+            self.assertNotEqual(path.suffix, ".pyc")
+            self.assertNotIn("private", path.parts)
+            if "knowledge_base" in path.parts:
+                self.assertEqual(path.name, "README.txt")
 
 
 if __name__ == "__main__":
