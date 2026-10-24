@@ -1,13 +1,21 @@
+# Python and build artifacts
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .venv/
 .env*
-knowledge_base/*.txt
-!knowledge_base/README.txt
+*.zip
+
+# Private buyer-provided cinematic Knowledge Bases (at ANY nesting level)
+**/knowledge_base/**
+!**/knowledge_base/README.txt
+
+# Never commit film projects, approvals, runtime state, keys or credentials
 **/PROJECT_RECORD.json
 **/SCREENPLAY.json
-projects/
-private/
+**/projects/
+**/private/
+**/workspaces/
 *.key
 *.pem
+*.p12
